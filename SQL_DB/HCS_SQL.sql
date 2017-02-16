@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         localhost
--- Server version:               10.1.16-MariaDB - mariadb.org binary distribution
+-- Server version:               5.6.26 - MySQL Community Server (GPL)
 -- Server OS:                    Win32
 -- HeidiSQL Verzió:              9.3.0.4984
 -- --------------------------------------------------------
@@ -39,15 +39,18 @@ CREATE TABLE IF NOT EXISTS `jegy` (
   `diakID` int(10) unsigned NOT NULL,
   `tantargyID` int(10) unsigned DEFAULT NULL,
   `JEGY` tinyint(4) NOT NULL,
+  `DATUM` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `tanevID` int(10) unsigned NOT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Dumping data for table enaplo.jegy: ~3 rows (approximately)
+-- Dumping data for table enaplo.jegy: ~4 rows (approximately)
 /*!40000 ALTER TABLE `jegy` DISABLE KEYS */;
-INSERT INTO `jegy` (`ID`, `diakID`, `tantargyID`, `JEGY`) VALUES
-	(3, 2, 2, 3),
-	(4, 3, 1, 4),
-	(5, 1, 3, 5);
+INSERT INTO `jegy` (`ID`, `diakID`, `tantargyID`, `JEGY`, `DATUM`, `tanevID`) VALUES
+	(3, 2, 2, 3, '2017-02-16 08:33:24', 1),
+	(4, 3, 1, 4, '2017-02-16 08:33:24', 1),
+	(5, 1, 3, 5, '2017-02-16 08:33:24', 1),
+	(6, 2, 1, 1, '2017-02-16 08:33:46', 1);
 /*!40000 ALTER TABLE `jegy` ENABLE KEYS */;
 
 
@@ -67,6 +70,22 @@ INSERT INTO `osztaly` (`ID`, `EVFOLYAM`, `BETU`, `KEZDES`, `SZAK`) VALUES
 	(1, 13, 'A', 1222, 'Informatika'),
 	(2, 13, 'B', 1222, 'Közgazdaság');
 /*!40000 ALTER TABLE `osztaly` ENABLE KEYS */;
+
+
+-- Dumping structure for tábla enaplo.tanev
+CREATE TABLE IF NOT EXISTS `tanev` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `tanev` tinytext COLLATE utf8_hungarian_ci,
+  `kezdes` date DEFAULT NULL,
+  `veg` date DEFAULT NULL,
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- Dumping data for table enaplo.tanev: ~1 rows (approximately)
+/*!40000 ALTER TABLE `tanev` DISABLE KEYS */;
+INSERT INTO `tanev` (`ID`, `tanev`, `kezdes`, `veg`) VALUES
+	(1, '2016/17', '2016-09-01', '2017-06-15');
+/*!40000 ALTER TABLE `tanev` ENABLE KEYS */;
 
 
 -- Dumping structure for tábla enaplo.tantargy
