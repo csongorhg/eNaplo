@@ -20,26 +20,40 @@ function selectStudent()
 {
     global $conn;
 
-    $osztaly = $_GET["osztalyok"];
+    echo "<div id='diakok'>";
+    echo "<form action='tanevvalaszto.php' method='get'>";
 
+
+
+    //Kapott érték
+    $osztaly = $_GET["osztalyok"];
     $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
 
-    //Osztályba tartozó diákok
-    $sql = "SELECT diak.nev, diak.ID
-            FROM diak 
-            WHERE diak.osztalyID = ".$osztaly;
 
+
+    //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
+    $sql = "SELECT nev, ID
+            FROM diak 
+            WHERE osztalyID = ".$osztaly;
     echo "Név<br>";
-    echo "<select size='1'>";
     $result = $conn->query($sql);
 
+
+
+    //Kiirjuk az összes diákot
+    echo "<select size='1' name ='diakok'>";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            echo "<option>{$row["nev"]}</option>";
+            $str = $row["nev"];
+            echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }
     echo "</select>";
 
+
+
+    //elküld gomb
+    echo "<input type = 'submit' />";
 
     echo "</form>";
     echo "</div>";

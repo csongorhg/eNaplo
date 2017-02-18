@@ -48,11 +48,15 @@ function selectClass()
     echo "<form action='diakvalaszto.php' method='get'>";
 
 
+
     //Kiválasztjuk az összes évfolyamot, eltároljuk
     $sql = "SELECT evfolyam, betu, szak, id FROM osztaly";
-    echo "Évfolyam, név, szak<br>";
+    echo "Évfolyam, Évfolyam betü, szak<br>";
     $result = $conn->query($sql);
 
+
+
+    //Kiirjuk az összes évfolyamot
     echo "<select size='1' name = 'osztalyok'>";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
@@ -60,15 +64,15 @@ function selectClass()
             echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }
-
-    //Kiirjuk az összes évfolyamot
-
     echo "</select>";
+
+
 
     //elküld gomb
     echo "<input type = 'submit' />";
 
     echo "</form>";
+    echo "</div>";
 
 }
 

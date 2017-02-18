@@ -1,6 +1,6 @@
 -- --------------------------------------------------------
 -- Host:                         localhost
--- Server version:               5.6.26 - MySQL Community Server (GPL)
+-- Server version:               10.1.16-MariaDB - mariadb.org binary distribution
 -- Server OS:                    Win32
 -- HeidiSQL Verzió:              9.3.0.4984
 -- --------------------------------------------------------
@@ -57,18 +57,19 @@ INSERT INTO `jegy` (`ID`, `diakID`, `tantargyID`, `JEGY`, `DATUM`, `tanevID`) VA
 -- Dumping structure for tábla enaplo.osztaly
 CREATE TABLE IF NOT EXISTS `osztaly` (
   `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `EVFOLYAM` tinyint(4) DEFAULT NULL,
-  `BETU` char(3) COLLATE utf8_hungarian_ci DEFAULT NULL,
-  `KEZDES` smallint(5) unsigned DEFAULT NULL,
-  `SZAK` varchar(150) COLLATE utf8_hungarian_ci DEFAULT NULL,
+  `EVFOLYAM` tinyint(4) NOT NULL,
+  `BETU` char(3) COLLATE utf8_hungarian_ci NOT NULL,
+  `KEZDES` smallint(5) unsigned NOT NULL,
+  `SZAK` varchar(150) COLLATE utf8_hungarian_ci NOT NULL,
+  `AKTIV` bit(1) NOT NULL DEFAULT b'1',
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- Dumping data for table enaplo.osztaly: ~2 rows (approximately)
 /*!40000 ALTER TABLE `osztaly` DISABLE KEYS */;
-INSERT INTO `osztaly` (`ID`, `EVFOLYAM`, `BETU`, `KEZDES`, `SZAK`) VALUES
-	(1, 13, 'A', 1222, 'Informatika'),
-	(2, 13, 'B', 1222, 'Közgazdaság');
+INSERT INTO `osztaly` (`ID`, `EVFOLYAM`, `BETU`, `KEZDES`, `SZAK`, `AKTIV`) VALUES
+	(1, 13, 'A', 1222, 'Informatika', b'1'),
+	(2, 13, 'B', 1222, 'Közgazdaság', b'1');
 /*!40000 ALTER TABLE `osztaly` ENABLE KEYS */;
 
 
@@ -79,13 +80,32 @@ CREATE TABLE IF NOT EXISTS `tanev` (
   `kezdes` date DEFAULT NULL,
   `veg` date DEFAULT NULL,
   PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Dumping data for table enaplo.tanev: ~1 rows (approximately)
+-- Dumping data for table enaplo.tanev: ~0 rows (approximately)
 /*!40000 ALTER TABLE `tanev` DISABLE KEYS */;
 INSERT INTO `tanev` (`ID`, `tanev`, `kezdes`, `veg`) VALUES
-	(1, '2016/17', '2016-09-01', '2017-06-15');
+	(1, '2016/17', '2016-09-01', '2017-06-15'),
+	(2, '2015/16', '2015-09-01', '2016-06-15');
 /*!40000 ALTER TABLE `tanev` ENABLE KEYS */;
+
+
+-- Dumping structure for tábla enaplo.tanevdiak
+CREATE TABLE IF NOT EXISTS `tanevdiak` (
+  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `diakID` int(11) NOT NULL DEFAULT '0',
+  `tanevID` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`ID`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- Dumping data for table enaplo.tanevdiak: ~0 rows (approximately)
+/*!40000 ALTER TABLE `tanevdiak` DISABLE KEYS */;
+INSERT INTO `tanevdiak` (`ID`, `diakID`, `tanevID`) VALUES
+	(1, 2, 1),
+	(2, 1, 1),
+	(3, 3, 1),
+	(4, 1, 2);
+/*!40000 ALTER TABLE `tanevdiak` ENABLE KEYS */;
 
 
 -- Dumping structure for tábla enaplo.tantargy
