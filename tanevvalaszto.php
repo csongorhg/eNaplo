@@ -28,11 +28,11 @@ function selectYears()
     //Kapott érték
     $diak = $_GET["diakok"];
     $diak = mysqli_real_escape_string($conn, $diak); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
-    var_dump($diak);
+
 
 
     //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
-    $sql = "SELECT tanev.ID, tanev.tanev, tanev.kezdes, tanev.veg
+    $sql = "SELECT *
             FROM tanev INNER JOIN tanevdiak ON tanev.ID = tanevdiak.tanevID
             INNER JOIN diak ON tanevdiak.diakID = diak.ID 
             WHERE diak.ID = ".$diak;
@@ -45,7 +45,7 @@ function selectYears()
     echo " <select size = '1' name = 'tanevek'> ";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $str = $row["tanev"] . " " . $row["kezdes"] . " (" . $row["veg"] . ")";
+            $str = $row["tanev"];
             echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }

@@ -50,7 +50,7 @@ function selectClass()
 
 
     //Kiválasztjuk az összes évfolyamot, eltároljuk
-    $sql = "SELECT evfolyam, betu, szak, id FROM osztaly";
+    $sql = "SELECT * FROM osztaly";
     echo "Évfolyam, Évfolyam betü, szak<br>";
     $result = $conn->query($sql);
 

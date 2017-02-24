@@ -32,7 +32,7 @@ function selectStudent()
 
 
     //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
-    $sql = "SELECT nev, ID
+    $sql = "SELECT *
             FROM diak 
             WHERE osztalyID = ".$osztaly;
     echo "Név<br>";
@@ -57,6 +57,7 @@ function selectStudent()
 
     echo "</form>";
     echo "</div>";
+
 }
 
 
