@@ -21,7 +21,7 @@ function selectYears()
     global $conn;
 
     echo "<div id='tanevek'>";
-    echo "<form action='jegyek.php' method='get'>";
+    echo "<form action='jegyvalaszto.php' method='get'>";
 
 
 
