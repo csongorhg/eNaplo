@@ -17,15 +17,15 @@ USE `enaplo`;
 
 -- Dumping structure for tábla enaplo.diak
 CREATE TABLE IF NOT EXISTS `diak` (
-  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `NEV` varchar(50) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '0',
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nev` varchar(50) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '0',
   `osztalyID` int(10) unsigned DEFAULT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- Dumping data for table enaplo.diak: ~4 rows (approximately)
 /*!40000 ALTER TABLE `diak` DISABLE KEYS */;
-INSERT INTO `diak` (`ID`, `NEV`, `osztalyID`) VALUES
+INSERT INTO `diak` (`id`, `nev`, `osztalyID`) VALUES
 	(1, 'János Péter', 1),
 	(2, 'János Pali', 1),
 	(3, 'János Petra', 1),
@@ -35,18 +35,18 @@ INSERT INTO `diak` (`ID`, `NEV`, `osztalyID`) VALUES
 
 -- Dumping structure for tábla enaplo.jegy
 CREATE TABLE IF NOT EXISTS `jegy` (
-  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
   `diakID` int(10) unsigned NOT NULL,
   `tantargyID` int(10) unsigned DEFAULT NULL,
-  `JEGY` tinyint(4) NOT NULL,
-  `DATUM` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
+  `jegy` tinyint(4) NOT NULL,
+  `datum` timestamp NULL DEFAULT CURRENT_TIMESTAMP,
   `tanevID` int(10) unsigned NOT NULL,
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- Dumping data for table enaplo.jegy: ~4 rows (approximately)
 /*!40000 ALTER TABLE `jegy` DISABLE KEYS */;
-INSERT INTO `jegy` (`ID`, `diakID`, `tantargyID`, `JEGY`, `DATUM`, `tanevID`) VALUES
+INSERT INTO `jegy` (`id`, `diakID`, `tantargyID`, `jegy`, `datum`, `tanevID`) VALUES
 	(3, 2, 2, 3, '2017-02-16 08:33:24', 1),
 	(4, 3, 1, 4, '2017-02-16 08:33:24', 1),
 	(5, 1, 3, 5, '2017-02-16 08:33:24', 1),
@@ -56,18 +56,18 @@ INSERT INTO `jegy` (`ID`, `diakID`, `tantargyID`, `JEGY`, `DATUM`, `tanevID`) VA
 
 -- Dumping structure for tábla enaplo.osztaly
 CREATE TABLE IF NOT EXISTS `osztaly` (
-  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `EVFOLYAM` tinyint(4) NOT NULL,
-  `BETU` char(3) COLLATE utf8_hungarian_ci NOT NULL,
-  `KEZDES` smallint(5) unsigned NOT NULL,
-  `SZAK` varchar(150) COLLATE utf8_hungarian_ci NOT NULL,
-  `AKTIV` bit(1) NOT NULL DEFAULT b'1',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `evfolyam` tinyint(4) NOT NULL,
+  `betu` char(3) COLLATE utf8_hungarian_ci NOT NULL,
+  `kezdes` smallint(5) unsigned NOT NULL,
+  `szak` varchar(150) COLLATE utf8_hungarian_ci NOT NULL,
+  `aktiv` bit(1) NOT NULL DEFAULT b'1',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
 -- Dumping data for table enaplo.osztaly: ~2 rows (approximately)
 /*!40000 ALTER TABLE `osztaly` DISABLE KEYS */;
-INSERT INTO `osztaly` (`ID`, `EVFOLYAM`, `BETU`, `KEZDES`, `SZAK`, `AKTIV`) VALUES
+INSERT INTO `osztaly` (`id`, `evfolyam`, `betu`, `kezdes`, `szak`, `aktiv`) VALUES
 	(1, 13, 'A', 1222, 'Informatika', b'1'),
 	(2, 13, 'B', 1222, 'Közgazdaság', b'1');
 /*!40000 ALTER TABLE `osztaly` ENABLE KEYS */;
@@ -82,7 +82,7 @@ CREATE TABLE IF NOT EXISTS `tanev` (
   PRIMARY KEY (`ID`)
 ) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Dumping data for table enaplo.tanev: ~0 rows (approximately)
+-- Dumping data for table enaplo.tanev: ~2 rows (approximately)
 /*!40000 ALTER TABLE `tanev` DISABLE KEYS */;
 INSERT INTO `tanev` (`ID`, `tanev`, `kezdes`, `veg`) VALUES
 	(1, '2016/17', '2016-09-01', '2017-06-15'),
@@ -92,15 +92,15 @@ INSERT INTO `tanev` (`ID`, `tanev`, `kezdes`, `veg`) VALUES
 
 -- Dumping structure for tábla enaplo.tanevdiak
 CREATE TABLE IF NOT EXISTS `tanevdiak` (
-  `ID` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `diakID` int(11) NOT NULL DEFAULT '0',
   `tanevID` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Dumping data for table enaplo.tanevdiak: ~0 rows (approximately)
+-- Dumping data for table enaplo.tanevdiak: ~4 rows (approximately)
 /*!40000 ALTER TABLE `tanevdiak` DISABLE KEYS */;
-INSERT INTO `tanevdiak` (`ID`, `diakID`, `tanevID`) VALUES
+INSERT INTO `tanevdiak` (`id`, `diakID`, `tanevID`) VALUES
 	(1, 2, 1),
 	(2, 1, 1),
 	(3, 3, 1),
@@ -110,18 +110,38 @@ INSERT INTO `tanevdiak` (`ID`, `diakID`, `tanevID`) VALUES
 
 -- Dumping structure for tábla enaplo.tantargy
 CREATE TABLE IF NOT EXISTS `tantargy` (
-  `ID` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `NEV` varchar(50) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '0',
-  PRIMARY KEY (`ID`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `nev` varchar(50) COLLATE utf8_hungarian_ci NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 
--- Dumping data for table enaplo.tantargy: ~3 rows (approximately)
+-- Dumping data for table enaplo.tantargy: ~4 rows (approximately)
 /*!40000 ALTER TABLE `tantargy` DISABLE KEYS */;
-INSERT INTO `tantargy` (`ID`, `NEV`) VALUES
+INSERT INTO `tantargy` (`id`, `nev`) VALUES
 	(1, 'Matek'),
 	(2, 'Magyar'),
-	(3, 'Szakmai');
+	(3, 'Szakmai'),
+	(4, 'Orosz');
 /*!40000 ALTER TABLE `tantargy` ENABLE KEYS */;
+
+
+-- Dumping structure for tábla enaplo.tantargyszak
+CREATE TABLE IF NOT EXISTS `tantargyszak` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tantargyid` int(10) unsigned DEFAULT '0',
+  `kategoriaszak` varchar(50) COLLATE utf8_hungarian_ci DEFAULT '0',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+
+-- Dumping data for table enaplo.tantargyszak: ~5 rows (approximately)
+/*!40000 ALTER TABLE `tantargyszak` DISABLE KEYS */;
+INSERT INTO `tantargyszak` (`id`, `tantargyid`, `kategoriaszak`) VALUES
+	(1, 1, 'Informatika'),
+	(2, 2, 'Közgazdaság'),
+	(3, 3, 'Informatika'),
+	(4, 1, 'Közgazdaság'),
+	(5, 4, 'Informatika');
+/*!40000 ALTER TABLE `tantargyszak` ENABLE KEYS */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
 /*!40014 SET FOREIGN_KEY_CHECKS=IF(@OLD_FOREIGN_KEY_CHECKS IS NULL, 1, @OLD_FOREIGN_KEY_CHECKS) */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

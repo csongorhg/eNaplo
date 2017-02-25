@@ -30,11 +30,13 @@ function selectYears()
 
 
 
-    //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
-    $sql = "SELECT *
-    FROM tantargy INNER JOIN jegy ON tantargy.id = jegy.tantargyID
-    INNER JOIN diak ON jegy.diakID = diak.id
-    WHERE diak.id = 1".$tanev;
+    //Kiválasztjuk a diák osztálya alapján a lehetséges tantárgyakat
+    $sql = "SELECT DISTINCT tantargy.nev
+FROM diak
+INNER JOIN osztaly ON diak.osztalyID = osztaly.id
+INNER JOIN tantargyszak ON osztaly.szak = tantargyszak.kategoriaszak
+INNER JOIN tantargy ON tantargyszak.tantargyid = tantargy.id
+WHERE diak.id = 1";
     echo "Jegyek...<br>";
     $result = $conn->query($sql);
 
