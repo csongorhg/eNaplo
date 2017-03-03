@@ -6,12 +6,22 @@
  * Time: 9:08
  */
 
-global $servername, $username, $password, $dbname, $conn;
+global $servername, $username, $password, $dbname, $conn, $tableDiak, $tableJegy, $tableOsztaly, $tableTanev, $tableTanevDiak, $tableTantargy, $tableTantargySzak;
 
 $servername = "localhost";
 $username = "csongi";
 $password = "";
 $dbname = "enaplo";
+
+$tableDiak = "diak";
+$tableJegy = "jegy";
+$tableOsztaly = "osztaly";
+$tableTanev = "tanev";
+$tableTanevDiak = "tanevdiak";
+$tableTantargy = "tantargy";
+$tableTantargySzak = "tantargyszak";
+
+
 
 function connect()
 {
@@ -23,6 +33,8 @@ function connect()
         die("Unable to connect (" + $ex + ")");
     }
 }
+
+
 
 
 

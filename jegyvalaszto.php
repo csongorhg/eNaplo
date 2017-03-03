@@ -1,3 +1,8 @@
+
+<head>
+    <link rel="stylesheet" href="komplexCSS.css">
+</head>
+
 <?php
 /**
  * Created by PhpStorm.
@@ -15,10 +20,9 @@ selectYears();
 
 disconnect();
 
-
 function selectYears()
 {
-    global $conn;
+    global $conn, $tableDiak, $tableOsztaly, $tableTantargySzak, $tableTantargy;
 
     echo "<div id='jegyek'>";
 
@@ -31,48 +35,47 @@ function selectYears()
 
 
     //Kiválasztjuk a diák osztálya alapján a lehetséges tantárgyakat
-    $sql = "SELECT DISTINCT tantargy.nev
-FROM diak
-INNER JOIN osztaly ON diak.osztalyID = osztaly.id
-INNER JOIN tantargyszak ON osztaly.szak = tantargyszak.kategoriaszak
-INNER JOIN tantargy ON tantargyszak.tantargyid = tantargy.id
-WHERE diak.id = 1";
+    $sql = "SELECT DISTINCT ".$tableTantargy.".nev 
+    FROM ".$tableDiak."
+    INNER JOIN ".$tableOsztaly." ON ".$tableDiak.".osztalyID = ".$tableOsztaly.".id
+    INNER JOIN ".$tableTantargySzak." ON ".$tableOsztaly.".szak = ".$tableTantargySzak.".kategoriaszak
+    INNER JOIN ".$tableTantargy." ON ".$tableTantargySzak.".tantargyid = ".$tableTantargy.".id
+    WHERE ".$tableDiak.".id = 1";
     echo "Jegyek...<br>";
     $result = $conn->query($sql);
 
 
 
-    //Kiirjuk az összes tanévet
-    /*echo " <select size = '1' name = 'tanevek'> ";
+    //DivTable.com
+    echo "<div class='divTable'>";
+    echo "<div class='divTableBody'>";
+
+
+
+    //Kiirjuk az összes hónapot
+    echo " <select size = '1' name = 'tanevek'> ";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $str = $row["tanev"];
             echo "<option value = '{$row["id"]}'>$str</option>";
+
+            echo "<div class='divTableRow'>";
+            echo "<div class='divTableCell'>&nbsp;</div>";
+            echo "<div class='divTableCell'>&nbsp;</div>";
+            echo "</div>";
+
         }
     }
-    echo "</select > ";*/
+    echo "</select > ";
 
 
-    /*
-     <div class="divTable">
-<div class="divTableBody">
-<div class="divTableRow">
-<div class="divTableCell">&nbsp;</div>
-<div class="divTableCell">&nbsp;</div>
-</div>
-<div class="divTableRow">
-<div class="divTableCell">&nbsp;</div>
-<div class="divTableCell">&nbsp;</div>
-</div>
-</div>
-</div>
-<!-- DivTable.com -->
 
-     * */
-
+    echo "</div>";
+    echo "</div>";
 
 
     //elküld gomb
+    /**/
 
     echo "</div > ";
 }

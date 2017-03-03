@@ -18,10 +18,10 @@ disconnect();
 
 function selectStudent()
 {
-    global $conn;
+    global $conn, $tableDiak;
 
     echo "<div id='diakok'>";
-    echo "<form action='tanevvalaszto.php' method='get'>";
+    echo "<form action='osztalyvalaszto.php' method='get'>";
 
 
 
@@ -33,7 +33,7 @@ function selectStudent()
 
     //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
     $sql = "SELECT *
-            FROM diak 
+            FROM ".$tableDiak." 
             WHERE osztalyID = ".$osztaly;
     echo "Név<br>";
     $result = $conn->query($sql);

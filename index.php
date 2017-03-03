@@ -42,25 +42,25 @@ disconnect();
 
 function selectClass()
 {
-    global $conn;
+    global $conn, $tableTanev;
 
     echo "<div id='osztalyok'>";
-    echo "<form action='diakvalaszto.php' method='get'>";
+    echo "<form action='osztalyvalaszto.php' method='get'>";
 
 
 
     //Kiválasztjuk az összes évfolyamot, eltároljuk
-    $sql = "SELECT * FROM osztaly";
-    echo "Évfolyam, Évfolyam betü, szak<br>";
+    $sql = "SELECT tanev.tanev FROM ".$tableTanev.";";
+    echo "Tanév<br>";
     $result = $conn->query($sql);
 
 
 
-    //Kiirjuk az összes évfolyamot
-    echo "<select size='1' name = 'osztalyok'>";
+    //Kiirjuk az összes tanévet
+    echo "<select size='1' name = 'tanevek'>";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $str = $row["evfolyam"] . " " . $row["betu"] . " (" . $row["szak"] . ")";
+            $str = $row["tanev"];
             echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }
