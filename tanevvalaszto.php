@@ -50,7 +50,7 @@ function selectClass()
 
 
     //Kiválasztjuk az összes évfolyamot, eltároljuk
-    $sql = "SELECT tanev.tanev FROM ".$tableTanev.";";
+    $sql = "SELECT * FROM ".$tableTanev.";";
     echo "Tanév<br>";
     $result = $conn->query($sql);
 
@@ -66,7 +66,7 @@ function selectClass()
     }
     echo "</select>";
 
-
+    
 
     //elküld gomb
     echo "<input type = 'submit' />";

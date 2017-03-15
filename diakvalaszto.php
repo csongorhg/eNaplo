@@ -18,23 +18,29 @@ disconnect();
 
 function selectStudent()
 {
-    global $conn, $tableDiak;
+    global $conn, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly;
 
     echo "<div id='diakok'>";
-    echo "<form action='osztalyvalaszto.php' method='get'>";
+    echo "<form action='jegyvalaszto.php' method='get'>";
 
 
 
     //Kapott érték
     $osztaly = $_GET["osztalyok"];
     $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
+    $tanev = $_GET["tanevek"];
+    $tanev = mysqli_real_escape_string($conn, $tanev);
+    
+    
 
 
-
-    //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
+    //Kiválasztjuk a kapott évfolyam és osztály alapján az abba tartozó diákokat
     $sql = "SELECT *
-            FROM ".$tableDiak." 
-            WHERE osztalyID = ".$osztaly;
+            FROM ".$tableDiak."
+            INNER JOIN ".$tableEvfolyam." ON ".$tableDiak.".id = ".$tableEvfolyam.".diakid
+            INNER JOIN ".$tableTanev." ON ".$tableEvfolyam.".tanevid = ".$tableTanev.".id
+            INNER JOIN ".$tableOsztaly." ON ".$tableEvfolyam.".osztalyid = ".$tableOsztaly.".id
+            WHERE ".$tableOsztaly.".id = ".$osztaly." AND ".$tableTanev.".id = ".$tanev.";";
     echo "Név<br>";
     $result = $conn->query($sql);
 

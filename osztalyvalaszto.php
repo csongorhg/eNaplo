@@ -33,10 +33,10 @@ function selectYears()
     
 
     //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
-    $sql = "SELECT ".$tableOsztaly.".szam, ".$tableOsztaly.".betu, ".$tableSzak.".szak
+    $sql = "SELECT ".$tableOsztaly.".id, ".$tableOsztaly.".szam, ".$tableOsztaly.".betu, ".$tableSzak.".szak
     FROM ".$tableOsztaly." INNER JOIN ".$tableEvfolyam." ON ".$tableOsztaly.".id = ".$tableEvfolyam.".osztalyid 
     INNER JOIN ".$tableSzak." ON ".$tableOsztaly.".szakid = ".$tableSzak.".id
-    WHERE ".$tableEvfolyam.".tanevid = 1";
+    WHERE ".$tableEvfolyam.".tanevid = ".$tanev;
     echo "Osztályok<br>";
     $result = $conn->query($sql);
 
