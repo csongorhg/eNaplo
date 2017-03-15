@@ -18,10 +18,10 @@ disconnect();
 
 function selectYears()
 {
-    global $conn, $tableTanev, $tableDiak, $tableTanevDiak;
+    global $conn, $tableOsztaly, $tableSzak, $tableEvfolyam;
 
-    echo "<div id='tanevek'>";
-    echo "<form action='jegyvalaszto.php' method='get'>";
+    echo "<div id='osztalyok'>";
+    echo "<form action='diakvalaszto.php' method='get'>";
 
 
 
@@ -30,11 +30,13 @@ function selectYears()
     $tanev = mysqli_real_escape_string($conn, $tanev); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
 
 
+    
 
     //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
-    $sql = "SELECT osztaly.evfolyam, osztaly.betu, osztaly.szak
-    FROM osztaly
-    WHERE osztaly.aktiv = 1";
+    $sql = "SELECT ".$tableOsztaly.".szam, ".$tableOsztaly.".betu, ".$tableSzak.".szak
+    FROM ".$tableOsztaly." INNER JOIN ".$tableEvfolyam." ON ".$tableOsztaly.".id = ".$tableEvfolyam.".osztalyid 
+    INNER JOIN ".$tableSzak." ON ".$tableOsztaly.".szakid = ".$tableSzak.".id
+    WHERE ".$tableEvfolyam.".tanevid = 1";
     echo "Osztályok<br>";
     $result = $conn->query($sql);
 
@@ -42,7 +44,7 @@ function selectYears()
     echo " <select size = '1' name = 'osztalyok'> ";
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $str = $row["evfolyam"] . " " . $row["betu"] . " (" . $row["szak"] . ")";
+            $str = $row["szam"] . "." . $row["betu"] . " (" . $row["szak"] . ")";
             echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }

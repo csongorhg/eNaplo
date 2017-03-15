@@ -6,12 +6,12 @@
  * Time: 9:08
  */
 
-global $servername, $username, $password, $dbname, $conn, $tableDiak, $tableJegy, $tableOsztaly, $tableTanev, $tableTanevDiak, $tableTantargy, $tableTantargySzak;
+global $servername, $username, $password, $dbname, $conn, $tableDiak, $tableJegy, $tableOsztaly, $tableTanev, $tableTanevDiak, $tableTantargy, $tableTantargySzak, $tableSzak, $tableEvfolyam;
 
 $servername = "localhost";
 $username = "csongi";
 $password = "";
-$dbname = "enaplo";
+$dbname = "enaplov2";
 
 $tableDiak = "diak";
 $tableJegy = "jegy";
@@ -20,6 +20,8 @@ $tableTanev = "tanev";
 $tableTanevDiak = "tanevdiak";
 $tableTantargy = "tantargy";
 $tableTantargySzak = "tantargyszak";
+$tableSzak = "szak";
+$tableEvfolyam = "evfolyam";
 
 
 
