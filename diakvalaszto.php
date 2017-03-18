@@ -26,16 +26,16 @@ function selectStudent()
 
 
     //Kapott érték
-    $osztaly = $_GET["osztalyok"];
-    $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
     $tanev = $_GET["tanevek"];
     $tanev = mysqli_real_escape_string($conn, $tanev);
+    $osztaly = $_GET["osztalyok"];
+    $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést   
     
     
 
 
     //Kiválasztjuk a kapott évfolyam és osztály alapján az abba tartozó diákokat
-    $sql = "SELECT *
+    $sql = "SELECT ".$tableDiak.".id, ".$tableDiak.".nev, ".$tableDiak.".szuletes 
             FROM ".$tableDiak."
             INNER JOIN ".$tableEvfolyam." ON ".$tableDiak.".id = ".$tableEvfolyam.".diakid
             INNER JOIN ".$tableTanev." ON ".$tableEvfolyam.".tanevid = ".$tableTanev.".id
@@ -60,6 +60,9 @@ function selectStudent()
 
     //elküld gomb
     echo "<input type = 'submit' />";
+    echo "<input type = 'hidden' name='osztalyok' value='$osztaly' />";
+    echo "<input type = 'hidden' name='tanevek' value='$tanev' />";
+    
 
     echo "</form>";
     echo "</div>";
