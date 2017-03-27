@@ -90,24 +90,33 @@ function selectYears() {
                         . "AND " . $tableTantargy . ".id = " . $row["id"] . " AND MONTH(" . $tableJegy . ".datum) = " . $x . "
             ORDER BY " . $tableJegy . ".datum";
 
-                $jegyek = NULL; //itt lesznek eltárolva a jegyek az adott hónaphoz
-                $jegyid = NULL; //jegy id-k
-                $tanarnev = NULL;
-                $jegynap = NULL;
+                $jegylista = [];
+                $jegyek = [];
 
                 $result2 = $conn->query($sql2);
                 if ($result2->num_rows > 0) {
                     while ($row2 = $result2->fetch_assoc()) {
-                        $jegyek .= $row2["jegy"] . ", ";
-                        $jegyid .= $row2["id"] . ", "; 
-                        $tanarnev .= $row2["nev"] . ", ";
-                        var_dump($tanarnev);
-                        $jegynap .= $row2["days"] . ", ";
-                        var_dump($jegynap);
+
+                        $jegylista[] = $row2["jegy"];
+                        $jegyek[] = $row2;
                     }
                 }
-                $jegyek = substr($jegyek, 0, -2); //utolsó vessző nem kell
-                echo "<td class='jegyek' onclick='jegyvalto(this, [" . $jegyid . "]);'>$jegyek</td>";
+                var_dump($jegylista);
+                $jegylista = implode(",", $jegylista);
+                var_dump($jegylista);
+                var_dump($jegyek);
+                $jegyek = json_encode($jegyek);
+                var_dump($jegyek);
+                echo "<td class='jegyek' onclick='jegyvalto(this, $jegyek);
+                '>$jegylista</td>";
+                //$jegylista = implode(",", $jegylista);
+                //echo "<td class='jegyek' onclick='jegyvalto(this, {json_encode($jegyek)});'>$jegylista</td>";
+                //$lofasz = implode(",", $jegylista);
+                //echo "<td class='jegyek' onclick='jegyvalto(this, {json_encode($jegyek)});'>".$lofasz."</td>";
+                //$gyoker = implode(", ", $jegylista);
+                //echo "$gyoker";
+                //echo implode(", ", $jegylista);
+                //echo "<td class='jegyek' onclick='jegyvalto(this, {json_encode($jegyek)});'>".implode(", ", $jegylista)."</td>";
                 if ($x == 12) {//ha elértük decembert akkor előről azaz 0
                     $x = 0;
                 }
@@ -153,39 +162,44 @@ echo "</div>";
 <body>
     <script type="text/javascript">
 
-        function jegyvalto(jegyek, jegyid) {
-            (jegyek.innerHTML).replace(" ", "");
-            //(jegyek.innerHTML).split(",");
-            //alert(jegyid[1]);
-            //alert(tanar[0]);
-            $modal = $('#myModal');
-            $modalBody = $(".modal-body");
-
-            var htmlString = "";
-            $modalBody.empty();
-
-            $modalBody.append("<div class='container'>");
-            for (var i = 0; i < (jegyek.innerHTML.split(",")).length; i++) {
-                //jegyid[i]
-                htmlString = (jegyek.innerHTML).split(",")[i];
-                if (htmlString)
-                    $modalBody.append("<input type='checkbox' /> " + htmlString + " <br />");
+        function jegyvalto(valamit, jegyek) {
+            for (var jegy of jegyek) {
+                alert("Napok: " + jegy.days);
+                alert("Tanár: " + jegy.nev);
             }
-            $modalBody.append("</div>");
-
-            $span = $(".close")[0];
-
-            $modal.css("display", "block");
-
-            $span.onclick = function () {
-                $modal.css("display", "none");
-            }
-
-            window.onclick = function (event) {
-                if (event.target === document.getElementById('myModal')) { //itt valamiért nem müködött a $(#..)
-                    $modal.css("display", "none");
-                }
-            }
+            /*
+             (jegyek.innerHTML).replace(" ", "");
+             //(jegyek.innerHTML).split(",");
+             alert(jegyid);
+             //alert(tanar[0]);
+             $modal = $('#myModal');
+             $modalBody = $(".modal-body");
+             
+             var htmlString = "";
+             $modalBody.empty();
+             
+             $modalBody.append("<div class='container'>");
+             for (var i = 0; i < (jegyek.innerHTML.split(",")).length; i++) {
+             //jegyid[i]
+             htmlString = (jegyek.innerHTML).split(",")[i];
+             if (htmlString)
+             $modalBody.append("<input type='checkbox' /> " + htmlString + " <br />");
+             }
+             $modalBody.append("</div>");
+             
+             $span = $(".close")[0];
+             
+             $modal.css("display", "block");
+             
+             $span.onclick = function () {
+             $modal.css("display", "none");
+             }
+             
+             window.onclick = function (event) {
+             if (event.target === document.getElementById('myModal')) { //itt valamiért nem müködött a $(#..)
+             $modal.css("display", "none");
+             }
+             }*/
         }
 
     </script>
