@@ -6,7 +6,7 @@
     <title>eNaplo</title>
 
     <style>
-
+        @import "valasztoCSS.css";
     </style>
 
 
@@ -45,13 +45,13 @@ function selectClass()
     global $conn, $tableTanev;
 
     echo "<div id='osztalyok'>";
-    echo "<form action='osztalyvalaszto.php' method='get'>";
+    echo "<div class='kiscim'>Tanév kiválasztása</div>";
+    echo "<form action='osztalyvalaszto.php' method='get' class='valaszto'>";
 
 
 
     //Kiválasztjuk az összes évfolyamot, eltároljuk
-    $sql = "SELECT tanev.tanev FROM ".$tableTanev.";";
-    echo "Tanév<br>";
+    $sql = "SELECT tanev.tanev, id FROM ".$tableTanev.";";
     $result = $conn->query($sql);
 
 
@@ -64,12 +64,12 @@ function selectClass()
             echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }
-    echo "</select>";
+    echo "</select><br>";
 
 
 
     //elküld gomb
-    echo "<input type = 'submit' />";
+    echo "<input type = 'submit' class='gomb' />";
 
     echo "</form>";
     echo "</div>";

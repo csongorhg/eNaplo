@@ -1,3 +1,7 @@
+<head>
+    <link href="valasztoCSS.css" rel="stylesheet" type="text/css"/>
+</head>
+
 <?php
 /**
  * Created by PhpStorm.
@@ -21,7 +25,8 @@ function selectStudent()
     global $conn, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly;
 
     echo "<div id='diakok'>";
-    echo "<form action='jegyvalaszto.php' method='get'>";
+    echo "<div class='kiscim'>Válasszon a diákok közül</div>";
+    echo "<form action='jegyvalaszto.php' method='get' class='valaszto'>";
 
 
 
@@ -29,9 +34,9 @@ function selectStudent()
     $tanev = $_GET["tanevek"];
     $tanev = mysqli_real_escape_string($conn, $tanev);
     $osztaly = $_GET["osztalyok"];
-    $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést   
-    
-    
+    $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
+
+
 
 
     //Kiválasztjuk a kapott évfolyam és osztály alapján az abba tartozó diákokat
@@ -41,7 +46,7 @@ function selectStudent()
             INNER JOIN ".$tableTanev." ON ".$tableEvfolyam.".tanevid = ".$tableTanev.".id
             INNER JOIN ".$tableOsztaly." ON ".$tableEvfolyam.".osztalyid = ".$tableOsztaly.".id
             WHERE ".$tableOsztaly.".id = ".$osztaly." AND ".$tableTanev.".id = ".$tanev.";";
-    echo "Név<br>";
+    //echo "Név<br>";
     $result = $conn->query($sql);
 
 
@@ -54,15 +59,15 @@ function selectStudent()
             echo "<option value = '{$row["id"]}'>$str</option>";
         }
     }
-    echo "</select>";
+    echo "</select><br>";
 
 
 
     //elküld gomb
-    echo "<input type = 'submit' />";
+    echo "<input type = 'submit' class='gomb'/>";
     echo "<input type = 'hidden' name='osztalyok' value='$osztaly' />";
     echo "<input type = 'hidden' name='tanevek' value='$tanev' />";
-    
+
 
     echo "</form>";
     echo "</div>";
