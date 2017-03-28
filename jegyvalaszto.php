@@ -23,11 +23,7 @@ disconnect();
 function selectYears() {
     global $conn, $tableTantargy, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly, $tableSzak, $tableTantargySzak, $tableJegy;
 
-    echo '<script type="text/javascript">',
-    'jegyvalto();',
-    '</script>'
-    ;
-
+    
     echo "<div id='jegyek'>";
 
 
@@ -101,22 +97,10 @@ function selectYears() {
                         $jegyek[] = $row2;
                     }
                 }
-                var_dump($jegylista);
                 $jegylista = implode(",", $jegylista);
-                var_dump($jegylista);
-                var_dump($jegyek);
                 $jegyek = json_encode($jegyek);
-                var_dump($jegyek);
                 echo "<td class='jegyek' onclick='jegyvalto(this, $jegyek);
                 '>$jegylista</td>";
-                //$jegylista = implode(",", $jegylista);
-                //echo "<td class='jegyek' onclick='jegyvalto(this, {json_encode($jegyek)});'>$jegylista</td>";
-                //$lofasz = implode(",", $jegylista);
-                //echo "<td class='jegyek' onclick='jegyvalto(this, {json_encode($jegyek)});'>".$lofasz."</td>";
-                //$gyoker = implode(", ", $jegylista);
-                //echo "$gyoker";
-                //echo implode(", ", $jegylista);
-                //echo "<td class='jegyek' onclick='jegyvalto(this, {json_encode($jegyek)});'>".implode(", ", $jegylista)."</td>";
                 if ($x == 12) {//ha elértük decembert akkor előről azaz 0
                     $x = 0;
                 }
@@ -162,44 +146,45 @@ echo "</div>";
 <body>
     <script type="text/javascript">
 
+            
+
+        $modal = $('#myModal');
+        $modalBody = $(".modal-body");
+        
         function jegyvalto(valamit, jegyek) {
+
+            $modal.css("display", "block");
+        
+            $modalBody.empty();
+            var htmlString = "";
+
+
             for (var jegy of jegyek) {
-                alert("Napok: " + jegy.days);
-                alert("Tanár: " + jegy.nev);
+
+                alert("ASD: " + jegy.id);
+                $modalBody.append("<div class='container'>");
+
+                htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " ";
+                $modalBody.append("<input type='checkbox' /> " + htmlString + " <br />");
+
+                $modalBody.append("</div>");
+
+
             }
-            /*
-             (jegyek.innerHTML).replace(" ", "");
-             //(jegyek.innerHTML).split(",");
-             alert(jegyid);
-             //alert(tanar[0]);
-             $modal = $('#myModal');
-             $modalBody = $(".modal-body");
-             
-             var htmlString = "";
-             $modalBody.empty();
-             
-             $modalBody.append("<div class='container'>");
-             for (var i = 0; i < (jegyek.innerHTML.split(",")).length; i++) {
-             //jegyid[i]
-             htmlString = (jegyek.innerHTML).split(",")[i];
-             if (htmlString)
-             $modalBody.append("<input type='checkbox' /> " + htmlString + " <br />");
-             }
-             $modalBody.append("</div>");
-             
-             $span = $(".close")[0];
-             
-             $modal.css("display", "block");
-             
-             $span.onclick = function () {
-             $modal.css("display", "none");
-             }
-             
-             window.onclick = function (event) {
-             if (event.target === document.getElementById('myModal')) { //itt valamiért nem müködött a $(#..)
-             $modal.css("display", "none");
-             }
-             }*/
+            
+        }
+
+
+        $span = $(".close")[0];
+
+        $span.onclick = function () {
+            $modal.css("display", "none");
+        }
+
+        window.onclick = function (event) {
+            if ($(event.target).get(0).id === 'myModal') { 
+                $modal.css("display", "none");
+            }
         }
 
     </script>
