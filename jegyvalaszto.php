@@ -23,7 +23,7 @@ disconnect();
 function selectYears() {
     global $conn, $tableTantargy, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly, $tableSzak, $tableTantargySzak, $tableJegy;
 
-    
+
     echo "<div id='jegyek'>";
 
 
@@ -131,7 +131,7 @@ echo "<div class='modal-body'>";
 echo "</div>";
 echo "<div class='modal-footer'>";
 echo "<div id = 'felv' >Új jegy</div>";
-echo "<div id = 'felvtorl' >Törlés</div>";
+echo "<div id = 'felvtorl' onclick='torles();'>Törlés</div>";
 echo "</div>";
 echo "</div>";
 
@@ -141,37 +141,70 @@ echo "</tbody>";
 echo "</table>";
 
 echo "</div>";
+
+echo "<form style='display: none' method='POST' action='jegyvalaszto.php' >";
+echo "<input type = 'text' name = 'torol'/>";
 ?>
 
 <body>
     <script type="text/javascript">
 
-            
+        var jegyekGlobal;
+
+        function torles() {
+
+            var checked = [];
+            $("input[name='jegyek[]']:checked").each(function ()
+            {
+                checked.push(parseInt($(this).val()));
+            });
+
+            if (checked.length > 0) {
+                if (confirm('A következő müvelet ' + checked.length + 'db jegyet fog törölni, biztosan törölni szeretné?')) {
+                    
+                    //TÖRLÉS
+                    $('#torles').submit();
+                    $del = checked;
+                    var torles = document.forms[0];
+                    torles.torol.value = JSON.stringify($del);
+                    torles.submit();
+                    location.reload();
+                    //
+                    
+                } else {
+                    return;
+                }
+            } else
+                return;
+
+
+        }
+
 
         $modal = $('#myModal');
         $modalBody = $(".modal-body");
-        
+
         function jegyvalto(valamit, jegyek) {
 
+            //jegyekGlobal = jegyek;
+
             $modal.css("display", "block");
-        
+
             $modalBody.empty();
             var htmlString = "";
 
-
             for (var jegy of jegyek) {
 
-                alert("ASD: " + jegy.id);
+                //alert("ASD: " + jegy.id);
                 $modalBody.append("<div class='container'>");
 
                 htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " ";
-                $modalBody.append("<input type='checkbox' /> " + htmlString + " <br />");
+                $modalBody.append("<input type='checkbox' name='jegyek[]' value='" + jegy.id + "'/> " + htmlString + " <br />");
 
                 $modalBody.append("</div>");
 
-
             }
-            
+
         }
 
 
@@ -182,7 +215,7 @@ echo "</div>";
         }
 
         window.onclick = function (event) {
-            if ($(event.target).get(0).id === 'myModal') { 
+            if ($(event.target).get(0).id === 'myModal') {
                 $modal.css("display", "none");
             }
         }
