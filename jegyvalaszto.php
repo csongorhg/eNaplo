@@ -11,14 +11,41 @@
  * Date: 2017.02.18.
  * Time: 10:05
  */
+
+
+if (!isset($_GET["osztalyok"]) || !isset($_GET["tanevek"]) || !isset($_GET["diakok"])) {
+    header('Location: tanevvalaszto.php');
+    exit();
+}
+
+
 include 'dbCommands.php';
 
 //main
 connect();
 
+// akciók végrehajtása
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    
+    switch ($_POST['akcio']) {
+        case 'torles':
+            $del = json_decode($_POST["torol"]);
+            
+            $idk = implode(",", $del);
+            
+            $sql = "DELETE FROM $tableJegy WHERE $tableJegy.id IN ($idk)";
+            $conn->query($sql);
+            break;
+    }
+        
+}
+
+
 selectYears();
 
+
 disconnect();
+
 
 function selectYears() {
     global $conn, $tableTantargy, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly, $tableSzak, $tableTantargySzak, $tableJegy;
@@ -142,11 +169,16 @@ echo "</table>";
 
 echo "</div>";
 
-echo "<form style='display: none' method='POST' action='jegyvalaszto.php' >";
-echo "<input type = 'text' name = 'torol'/>";
 ?>
 
 <body>
+       
+    
+    <form style='display: none'  action="" method="POST">
+        <input name="akcio" value="torles">
+        <input name="torol">
+    </form>
+    
     <script type="text/javascript">
 
         var jegyekGlobal;
@@ -163,14 +195,10 @@ echo "<input type = 'text' name = 'torol'/>";
                 if (confirm('A következő müvelet ' + checked.length + 'db jegyet fog törölni, biztosan törölni szeretné?')) {
                     
                     //TÖRLÉS
-                    $('#torles').submit();
                     $del = checked;
                     var torles = document.forms[0];
                     torles.torol.value = JSON.stringify($del);
-                    torles.submit();
-                    location.reload();
-                    //
-                    
+                    torles.submit();                    
                 } else {
                     return;
                 }
