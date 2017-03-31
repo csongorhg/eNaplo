@@ -36,8 +36,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql = "DELETE FROM $tableJegy WHERE $tableJegy.id IN ($idk)";
             $conn->query($sql);
             break;
+        case 'ujjegy':
+            $jegy = json_decode($_POST["ujjegy"]);
+            var_dump($jegy);
+            
+            break;
     }
-        
+    
 }
 
 
@@ -63,16 +68,16 @@ function selectYears() {
     $diak = $_GET["diakok"];
     $diak = mysqli_real_escape_string($conn, $diak); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
     //Kiválasztjuk a diák osztálya alapján a lehetséges tantárgyakat
-    $sql = "SELECT " . $tableTantargy . ".nev, " . $tableTantargy . ".id
-            FROM " . $tableDiak . "   
-            INNER JOIN " . $tableEvfolyam . " ON " . $tableDiak . ".id = " . $tableEvfolyam . ".diakid
-            INNER JOIN " . $tableTanev . " ON " . $tableEvfolyam . ".tanevid = " . $tableTanev . ".id
-            INNER JOIN " . $tableOsztaly . " ON " . $tableEvfolyam . ".osztalyid = " . $tableOsztaly . ".id
-            INNER JOIN " . $tableSzak . " ON " . $tableOsztaly . ".szakid = " . $tableSzak . ".id
-            INNER JOIN " . $tableTantargySzak . " ON " . $tableSzak . ".id = " . $tableTantargySzak . ".szakid
-            INNER JOIN " . $tableTantargy . " ON " . $tableTantargySzak . ".tantargyid = " . $tableTantargy . ".id
-            WHERE " . $tableDiak . ".id = " . $diak . " AND " . $tableOsztaly . ".id = " . $osztaly . " AND " . $tableTanev . ".id = " . $tanev . ""
-            . " ORDER BY " . $tableTantargy . ".nev ";
+    $sql = "SELECT $tableTantargy.nev, $tableTantargy.id
+            FROM $tableDiak   
+            INNER JOIN $tableEvfolyam ON $tableDiak.id = $tableEvfolyam.diakid
+            INNER JOIN $tableTanev ON $tableEvfolyam.tanevid = $tableTanev.id
+            INNER JOIN $tableOsztaly ON $tableEvfolyam.osztalyid = $tableOsztaly.id
+            INNER JOIN $tableSzak ON $tableOsztaly.szakid = $tableSzak.id
+            INNER JOIN $tableTantargySzak ON $tableSzak.id = $tableTantargySzak.szakid
+            INNER JOIN $tableTantargy ON $tableTantargySzak.tantargyid = $tableTantargy.id
+            WHERE $tableDiak.id = $diak AND $tableOsztaly.id = $osztaly AND $tableTanev.id = $tanev
+            ORDER BY $tableTantargy.nev";
     echo "Jegyek...<br>";
     $result = $conn->query($sql);
 
@@ -109,9 +114,9 @@ function selectYears() {
             INNER JOIN tanev ON evfolyam.tanevid = tanev.id
             INNER JOIN tantargy ON jegy.tantargyid = tantargy.id
             INNER JOIN tanar ON jegy.tanarid = tanar.id 
-            WHERE " . $tableDiak . ".id = " . $diak . " AND " . $tableOsztaly . ".id = " . $osztaly . " AND " . $tableTanev . ".id = " . $tanev . " "
-                        . "AND " . $tableTantargy . ".id = " . $row["id"] . " AND MONTH(" . $tableJegy . ".datum) = " . $x . "
-            ORDER BY " . $tableJegy . ".datum";
+            WHERE $tableDiak.id = $diak AND $tableOsztaly.id = $osztaly AND $tableTanev.id = $tanev
+                   AND $tableTantargy.id = {$row["id"]} AND MONTH($tableJegy.datum) = $x
+            ORDER BY $tableJegy.datum";
 
                 $jegylista = [];
                 $jegyek = [];
@@ -153,13 +158,18 @@ echo "<span class='close'>&times;</span>";
 echo "<h2>Jegyek</h2>";
 echo "</div>";
 echo "<div class='modal-body'>";
-/* echo "<p>Some text in the Modal Body</p>";
-  echo "<p>Some other text...</p>"; */
 echo "</div>";
+
 echo "<div class='modal-footer'>";
-echo "<div id = 'felv' >Új jegy</div>";
+echo "<div id = 'felv' onclick='pajlada();'>Új jegy</div>";
 echo "<div id = 'felvtorl' onclick='torles();'>Törlés</div>";
 echo "</div>";
+
+echo "<div class='modal-plus'><form><fieldset>"
+. "<legend id='legend-header'>Új jegy</legend>"
+        
+        . "<input type='number' name='quantity' min='1' max='5'>
+  <input type='button' name='ujjegy' onclick='jegyfelvetel();'></fieldset></form></div>";
 echo "</div>";
 
 echo "</div>";
@@ -181,7 +191,15 @@ echo "</div>";
     
     <script type="text/javascript">
 
-        var jegyekGlobal;
+        function pajlada() {
+            $(".modal-plus").css ({
+                    "display": "block",
+                    "-webkit-animation-name": "animatetop",
+                    "-webkit-animation-duration": "1s",
+                    "animation-name": "animatetop",
+                    "animation-duration": "1s"
+                });
+        }
 
         function torles() {
 
@@ -206,6 +224,10 @@ echo "</div>";
                 return;
 
 
+        }
+        
+        function jegyfelvetel() {
+            alert("asd");
         }
 
 
@@ -240,11 +262,13 @@ echo "</div>";
 
         $span.onclick = function () {
             $modal.css("display", "none");
+            $(".modal-plus").css("display", "none");
         }
 
         window.onclick = function (event) {
             if ($(event.target).get(0).id === 'myModal') {
                 $modal.css("display", "none");
+                $(".modal-plus").css("display", "none");
             }
         }
 

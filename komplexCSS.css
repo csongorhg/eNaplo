@@ -68,7 +68,13 @@ tr.td {
     color: white;
 }
 
-.modal-body {padding: 2px 16px;}
+.modal-body, .modal-plus{padding: 2px 16px;}
+
+.modal-plus {
+    display: none;
+}
+
+#legend-header {font-size: 20px; font-weight: bold;}
 
 .modal-footer {
     background-color: black;
