@@ -11,7 +11,7 @@
  * Date: 2017.02.18.
  * Time: 10:05
  */
-
+ 
 
 if (!isset($_GET["osztalyok"]) || !isset($_GET["tanevek"]) || !isset($_GET["diakok"])) {
     header('Location: tanevvalaszto.php');
@@ -24,9 +24,21 @@ include 'dbCommands.php';
 //main
 connect();
 
+
+//Kapott érték
+$osztaly = $_GET["osztalyok"];
+$osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
+$tanev = $_GET["tanevek"];
+$tanev = mysqli_real_escape_string($conn, $tanev);
+$diak = $_GET["diakok"];
+$diak = mysqli_real_escape_string($conn, $diak); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
+	
+	
 // akciók végrehajtása
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     
+	global $osztaly, $tanev, $diak;
+	
     switch ($_POST['akcio']) {
         case 'torles':
             $del = json_decode($_POST["torol"]);
@@ -36,11 +48,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $sql = "DELETE FROM $tableJegy WHERE $tableJegy.id IN ($idk)";
             $conn->query($sql);
             break;
-        case 'ujjegy':
+			
+		case 'jegyfel':
             $jegy = json_decode($_POST["ujjegy"]);
-            var_dump($jegy);
-            
+			
+			
+			$sql = "SELECT id FROM evfolyam WHERE tanevid = $tanev AND diakid = $diak AND osztalyid = $osztaly"; //évfolyam id
+			$result = mysqli_query($conn, $sql);
+			if (mysqli_num_rows($result) > 0) {
+				while ($row = mysqli_fetch_assoc($result)) {
+					$megoldas = $row["id"];
+				}
+			}
+			var_dump($jegy);
+			
+			//$sql = "INSERT INTO $tableJegy (evfolyamid, jegy, tanarid, tantargyid) VALUES ((string)$megoldas, (string)$jegy, (string)$jegy.tanarid, (string)$jegy.tantargyid);";
+            //$conn->query($sql);
             break;
+
     }
     
 }
@@ -53,20 +78,14 @@ disconnect();
 
 
 function selectYears() {
-    global $conn, $tableTantargy, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly, $tableSzak, $tableTantargySzak, $tableJegy;
+    global $conn, $tableTantargy, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly, $tableSzak, $tableTantargySzak, $tableJegy, $osztaly, $tanev, $diak;
 
 
     echo "<div id='jegyek'>";
 
 
 
-    //Kapott érték
-    $osztaly = $_GET["osztalyok"];
-    $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
-    $tanev = $_GET["tanevek"];
-    $tanev = mysqli_real_escape_string($conn, $tanev);
-    $diak = $_GET["diakok"];
-    $diak = mysqli_real_escape_string($conn, $diak); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
+    
     //Kiválasztjuk a diák osztálya alapján a lehetséges tantárgyakat
     $sql = "SELECT $tableTantargy.nev, $tableTantargy.id
             FROM $tableDiak   
@@ -107,7 +126,7 @@ function selectYears() {
 
             for ($x = 9; $x <= 12; $x++) { //hónapok végigjárása 9 azaz szeptembertől kezdve
                 //IDE JÖNNEK A JEGYEK//
-                $sql2 = "SELECT jegy.id, jegy.evfolyamid, jegy.jegy, DAY(jegy.datum) AS days, tanar.nev
+                $sql2 = "SELECT jegy.id, jegy.evfolyamid, jegy.jegy, DAY(jegy.datum) AS days, tanar.nev, jegy.tantargyid, jegy.tanarid
             FROM jegy INNER JOIN evfolyam ON jegy.evfolyamid = evfolyam.id
             INNER JOIN osztaly ON evfolyam.osztalyid = osztaly.id
             INNER JOIN diak ON evfolyam.diakid = diak.id
@@ -165,11 +184,10 @@ echo "<div id = 'felv' onclick='pajlada();'>Új jegy</div>";
 echo "<div id = 'felvtorl' onclick='torles();'>Törlés</div>";
 echo "</div>";
 
-echo "<div class='modal-plus'><form><fieldset>"
-. "<legend id='legend-header'>Új jegy</legend>"
-        
-        . "<input type='number' name='quantity' min='1' max='5'>
-  <input type='button' name='ujjegy' onclick='jegyfelvetel();'></fieldset></form></div>";
+echo "<div class='modal-plus'><fieldset>";
+echo "<legend id='legend-header'>Új jegy</legend>";
+echo "<input type='number' name='quantity' min='1' max='5' id='felvevo'>";
+echo "<input type='button' name='ujjegy' onclick='jegyfelvetel();' value='felvétel'></fieldset></div>";
 echo "</div>";
 
 echo "</div>";
@@ -187,6 +205,11 @@ echo "</div>";
     <form style='display: none'  action="" method="POST">
         <input name="akcio" value="torles">
         <input name="torol">
+    </form>
+	
+	<form style='display: none'  action="" method="POST">
+        <input name="akcio" value="jegyfel">
+        <input name="ujjegy">
     </form>
     
     <script type="text/javascript">
@@ -214,9 +237,11 @@ echo "</div>";
                     
                     //TÖRLÉS
                     $del = checked;
+					alert($del);
                     var torles = document.forms[0];
+					
                     torles.torol.value = JSON.stringify($del);
-                    torles.submit();                    
+                    torles.submit();
                 } else {
                     return;
                 }
@@ -226,8 +251,12 @@ echo "</div>";
 
         }
         
-        function jegyfelvetel() {
-            alert("asd");
+        function jegyfelvetel() {                   
+			//JEGYFELVÉTEL
+			$up = $("#felvevo");
+			var felvetel = document.forms[1];
+			felvetel.ujjegy.value = JSON.stringify($up);
+			felvetel.submit();	
         }
 
 
@@ -237,18 +266,18 @@ echo "</div>";
         function jegyvalto(valamit, jegyek) {
 
             //jegyekGlobal = jegyek;
-
+			
             $modal.css("display", "block");
 
             $modalBody.empty();
             var htmlString = "";
 
             for (var jegy of jegyek) {
-
+				alert(jegy.tantargyid);
                 //alert("ASD: " + jegy.id);
                 $modalBody.append("<div class='container'>");
 
-                htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " ";
+                htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " " + jegy.tantargyid;
                 $modalBody.append("<input type='checkbox' name='jegyek[]' value='" + jegy.id + "'/> " + htmlString + " <br />");
 
                 $modalBody.append("</div>");
