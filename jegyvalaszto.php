@@ -49,9 +49,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             $conn->query($sql);
             break;
 			
-		case 'jegyfel':
-            $jegy = json_decode($_POST["ujjegy"]);
-			
+	case 'jegyfel':
+            $jegy = ($_POST["ujjegy"]);
 			
 			$sql = "SELECT id FROM evfolyam WHERE tanevid = $tanev AND diakid = $diak AND osztalyid = $osztaly"; //évfolyam id
 			$result = mysqli_query($conn, $sql);
@@ -60,9 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 					$megoldas = $row["id"];
 				}
 			}
-			var_dump($jegy);
 			
-			//$sql = "INSERT INTO $tableJegy (evfolyamid, jegy, tanarid, tantargyid) VALUES ((string)$megoldas, (string)$jegy, (string)$jegy.tanarid, (string)$jegy.tantargyid);";
+                        
+			echo "$jegy";
+                        //tanárt át kell szervezni
+			$sql = "INSERT INTO $tableJegy (evfolyamid, jegy, tanarid, tantargyid) VALUES ((string)$megoldas, (string)$jegy, 1, (string)$jegy.tantargyid);";
             //$conn->query($sql);
             break;
 
@@ -120,7 +121,7 @@ function selectYears() {
     //Kiirjuk az összes lehetséges tárgyát ebben a tanévben ehez az osztályhoz
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
-            $str = $row["nev"];
+            $str = $row["nev"]; //itt tudjuk a hónapot
             echo "<tr>";
             echo "<td class='month'>$str</td>";
 
@@ -253,9 +254,10 @@ echo "</div>";
         
         function jegyfelvetel() {                   
 			//JEGYFELVÉTEL
-			$up = $("#felvevo");
+			$up = $("#felvevo").val();
 			var felvetel = document.forms[1];
-			felvetel.ujjegy.value = JSON.stringify($up);
+			felvetel.ujjegy.value = $up;
+                        alert(felvetel.ujjegy.value);
 			felvetel.submit();	
         }
 
@@ -266,17 +268,16 @@ echo "</div>";
         function jegyvalto(valamit, jegyek) {
 
             //jegyekGlobal = jegyek;
-			
             $modal.css("display", "block");
 
             $modalBody.empty();
             var htmlString = "";
 
             for (var jegy of jegyek) {
-				alert(jegy.tantargyid);
+		
                 //alert("ASD: " + jegy.id);
                 $modalBody.append("<div class='container'>");
-
+                alert("csetteg: "+jegy.tantargyid);
                 htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " " + jegy.tantargyid;
                 $modalBody.append("<input type='checkbox' name='jegyek[]' value='" + jegy.id + "'/> " + htmlString + " <br />");
 
