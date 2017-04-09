@@ -9,8 +9,8 @@
 global $servername, $username, $password, $dbname, $conn, $tableDiak, $tableJegy, $tableOsztaly, $tableTanev, $tableTanevDiak, $tableTantargy, $tableTantargySzak, $tableSzak, $tableEvfolyam;
 
 $servername = "localhost";
-$username = "root";
-$password = "123456";
+$username = "csongi";
+$password = "";
 $dbname = "enaplov2";
 
 $tableDiak = "diak";

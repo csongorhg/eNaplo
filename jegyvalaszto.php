@@ -238,7 +238,6 @@ echo "</div>";
                     
                     //TÖRLÉS
                     $del = checked;
-					alert($del);
                     var torles = document.forms[0];
 					
                     torles.torol.value = JSON.stringify($del);
@@ -257,7 +256,6 @@ echo "</div>";
 			$up = $("#felvevo").val();
 			var felvetel = document.forms[1];
 			felvetel.ujjegy.value = $up;
-                        alert(felvetel.ujjegy.value);
 			felvetel.submit();	
         }
 
@@ -277,7 +275,6 @@ echo "</div>";
 		
                 //alert("ASD: " + jegy.id);
                 $modalBody.append("<div class='container'>");
-                alert("csetteg: "+jegy.tantargyid);
                 htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " " + jegy.tantargyid;
                 $modalBody.append("<input type='checkbox' name='jegyek[]' value='" + jegy.id + "'/> " + htmlString + " <br />");
 
