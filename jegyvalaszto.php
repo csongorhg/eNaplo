@@ -11,8 +11,6 @@
  * Date: 2017.02.18.
  * Time: 10:05
  */
- 
-
 if (!isset($_GET["osztalyok"]) || !isset($_GET["tanevek"]) || !isset($_GET["diakok"])) {
     header('Location: tanevvalaszto.php');
     exit();
@@ -24,6 +22,7 @@ include 'dbCommands.php';
 //main
 connect();
 
+$tantargyid;
 
 //Kapott érték
 $osztaly = $_GET["osztalyok"];
@@ -32,43 +31,52 @@ $tanev = $_GET["tanevek"];
 $tanev = mysqli_real_escape_string($conn, $tanev);
 $diak = $_GET["diakok"];
 $diak = mysqli_real_escape_string($conn, $diak); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
-	
-	
 // akciók végrehajtása
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    
-	global $osztaly, $tanev, $diak;
-	
+
+    global $osztaly, $tanev, $diak, $tantargyid;
+
     switch ($_POST['akcio']) {
         case 'torles':
             $del = json_decode($_POST["torol"]);
-            
+
             $idk = implode(",", $del);
-            
+
             $sql = "DELETE FROM $tableJegy WHERE $tableJegy.id IN ($idk)";
             $conn->query($sql);
             break;
-			
-	case 'jegyfel':
-            $jegy = ($_POST["ujjegy"]);
-			
-			$sql = "SELECT id FROM evfolyam WHERE tanevid = $tanev AND diakid = $diak AND osztalyid = $osztaly"; //évfolyam id
-			$result = mysqli_query($conn, $sql);
-			if (mysqli_num_rows($result) > 0) {
-				while ($row = mysqli_fetch_assoc($result)) {
-					$megoldas = $row["id"];
-				}
-			}
-			
-                        
-			echo "$jegy";
-                        //tanárt át kell szervezni
-			$sql = "INSERT INTO $tableJegy (evfolyamid, jegy, tanarid, tantargyid) VALUES ((string)$megoldas, (string)$jegy, 1, (string)$jegy.tantargyid);";
-            //$conn->query($sql);
-            break;
 
+        case 'jegyfel':
+            $jegy = ($_POST["ujjegy"]);
+
+            $str = explode("#",$jegy);
+
+            $ertek = $str[0];
+            $tantargy = $str[1];
+            $honap =$str[2];
+
+
+
+            $sql = "SELECT id FROM evfolyam WHERE tanevid = $tanev AND diakid = $diak AND osztalyid = $osztaly"; //évfolyam id
+            $result = mysqli_query($conn, $sql);
+            if (mysqli_num_rows($result) > 0) {
+                while ($row = mysqli_fetch_assoc($result)) {
+                    $megoldas = $row["id"];
+                }
+            }
+
+            $ev = date("Y");
+            if($honap > 6){
+                $ev--;
+            }
+
+            $d=mktime(0, 0, 0, $honap, date("d"), $ev);
+            $date = date("Y-m-d h:i:sa", $d);
+            $date = str_replace("am", "", $date);
+            $sql = "INSERT INTO $tableJegy (evfolyamid, jegy, tanarid, tantargyid, datum) VALUES ($megoldas, $ertek, 1, $tantargy, '$date');";
+            $conn->query($sql);
+            break;
     }
-    
 }
 
 
@@ -76,7 +84,6 @@ selectYears();
 
 
 disconnect();
-
 
 function selectYears() {
     global $conn, $tableTantargy, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly, $tableSzak, $tableTantargySzak, $tableJegy, $osztaly, $tanev, $diak;
@@ -86,7 +93,7 @@ function selectYears() {
 
 
 
-    
+
     //Kiválasztjuk a diák osztálya alapján a lehetséges tantárgyakat
     $sql = "SELECT $tableTantargy.nev, $tableTantargy.id
             FROM $tableDiak   
@@ -118,13 +125,13 @@ function selectYears() {
 
     echo "</tr>";
 
-    //Kiirjuk az összes lehetséges tárgyát ebben a tanévben ehez az osztályhoz
+    //Kiirjuk az összes lehetséges tárgyát ebben a tanévben ehhez az osztályhoz
     if ($result->num_rows > 0) {
         while ($row = $result->fetch_assoc()) {
             $str = $row["nev"]; //itt tudjuk a hónapot
             echo "<tr>";
             echo "<td class='month'>$str</td>";
-
+            $omg = $row["id"];
             for ($x = 9; $x <= 12; $x++) { //hónapok végigjárása 9 azaz szeptembertől kezdve
                 //IDE JÖNNEK A JEGYEK//
                 $sql2 = "SELECT jegy.id, jegy.evfolyamid, jegy.jegy, DAY(jegy.datum) AS days, tanar.nev, jegy.tantargyid, jegy.tanarid
@@ -151,7 +158,10 @@ function selectYears() {
                 }
                 $jegylista = implode(",", $jegylista);
                 $jegyek = json_encode($jegyek);
-                echo "<td class='jegyek' onclick='jegyvalto(this, $jegyek);
+
+                $szar = $omg . "#" . $x;
+
+                echo "<td class='jegyek' id='$szar' onclick='jegyvalto(this, $jegyek,this.id);
                 '>$jegylista</td>";
                 if ($x == 12) {//ha elértük decembert akkor előről azaz 0
                     $x = 0;
@@ -197,108 +207,121 @@ echo "</tbody>";
 echo "</table>";
 
 echo "</div>";
-
 ?>
 
 <body>
-       
-    
-    <form style='display: none'  action="" method="POST">
-        <input name="akcio" value="torles">
-        <input name="torol">
-    </form>
-	
-	<form style='display: none'  action="" method="POST">
-        <input name="akcio" value="jegyfel">
-        <input name="ujjegy">
-    </form>
-    
-    <script type="text/javascript">
 
-        function pajlada() {
-            $(".modal-plus").css ({
-                    "display": "block",
-                    "-webkit-animation-name": "animatetop",
-                    "-webkit-animation-duration": "1s",
-                    "animation-name": "animatetop",
-                    "animation-duration": "1s"
-                });
-        }
 
-        function torles() {
+<form style='display: none'  action="" method="POST">
+    <input name="akcio" value="torles">
+    <input name="torol">
+</form>
 
-            var checked = [];
-            $("input[name='jegyek[]']:checked").each(function ()
-            {
-                checked.push(parseInt($(this).val()));
-            });
+<form style='display: none'  action="" method="POST">
+    <input name="akcio" value="jegyfel">
+    <input name="ujjegy">
+</form>
 
-            if (checked.length > 0) {
-                if (confirm('A következő müvelet ' + checked.length + 'db jegyet fog törölni, biztosan törölni szeretné?')) {
-                    
-                    //TÖRLÉS
-                    $del = checked;
-                    var torles = document.forms[0];
-					
-                    torles.torol.value = JSON.stringify($del);
-                    torles.submit();
-                } else {
-                    return;
-                }
-            } else
+<script type="text/javascript">
+
+    function pajlada() {
+        $(".modal-plus").css({
+            "display": "block",
+            "-webkit-animation-name": "animatetop",
+            "-webkit-animation-duration": "1s",
+            "animation-name": "animatetop",
+            "animation-duration": "1s"
+        });
+    }
+
+    function torles() {
+
+        var checked = [];
+        $("input[name='jegyek[]']:checked").each(function ()
+        {
+            checked.push(parseInt($(this).val()));
+        });
+
+        if (checked.length > 0) {
+            if (confirm('A következő müvelet ' + checked.length + 'db jegyet fog törölni, biztosan törölni szeretné?')) {
+
+                //TÖRLÉS
+                $del = checked;
+                var torles = document.forms[0];
+
+                torles.torol.value = JSON.stringify($del);
+                torles.submit();
+            } else {
                 return;
-
-
-        }
-        
-        function jegyfelvetel() {                   
-			//JEGYFELVÉTEL
-			$up = $("#felvevo").val();
-			var felvetel = document.forms[1];
-			felvetel.ujjegy.value = $up;
-			felvetel.submit();	
-        }
-
-
-        $modal = $('#myModal');
-        $modalBody = $(".modal-body");
-
-        function jegyvalto(valamit, jegyek) {
-
-            //jegyekGlobal = jegyek;
-            $modal.css("display", "block");
-
-            $modalBody.empty();
-            var htmlString = "";
-
-            for (var jegy of jegyek) {
-		
-                //alert("ASD: " + jegy.id);
-                $modalBody.append("<div class='container'>");
-                htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " " + jegy.tantargyid;
-                $modalBody.append("<input type='checkbox' name='jegyek[]' value='" + jegy.id + "'/> " + htmlString + " <br />");
-
-                $modalBody.append("</div>");
-
             }
+        } else
+            return;
+
+
+    }
+
+    function jegyfelvetel() {
+        //JEGYFELVÉTEL
+        $up = $("#felvevo").val();
+        if ($up > 0 && $up < 6) {
+            var felvetel = document.forms[1];
+            $array = $up +"#"+ $tantargy +"#"+ $honap;
+            alert($array);
+            felvetel.ujjegy.value = $array;
+            felvetel.submit();
+        } else {
+            alert("Hibás jegy! (1-5)");
+        }
+    }
+
+
+    $modal = $('#myModal');
+    $modalBody = $(".modal-body");
+    $tantargy = 0;
+    $honap = 0;
+
+    function jegyvalto(valamit, jegyek, id) {
+
+        $str = id.split("#");
+        alert($str);
+        $tantargy = $str[0];
+        $honap = $str[1];
+
+
+        //jegyekGlobal = jegyek;
+        $modal.css("display", "block");
+
+        $modalBody.empty();
+        var htmlString = "";
+
+        for (var jegy of jegyek) {
+
+            //alert("ASD: " + jegy.id);
+            $modalBody.append("<div class='container'>");
+            htmlString = jegy.jegy + "  " + jegy.days + " " + jegy.nev + " " + jegy.id + " " + jegy.evfolyamid + " " + jegy.tantargyid;
+            $modalBody.append("<input type='checkbox' name='jegyek[]' value='" + jegy.id + "'/> " + htmlString + " <br />");
+
+            $modalBody.append("</div>");
 
         }
 
+    }
 
-        $span = $(".close")[0];
 
-        $span.onclick = function () {
+    $span = $(".close")[0];
+
+    $span.onclick = function () {
+        $modal.css("display", "none");
+        $(".modal-plus").css("display", "none");
+    }
+
+    window.onclick = function (event) {
+        if ($(event.target).get(0).id === 'myModal') {
             $modal.css("display", "none");
             $(".modal-plus").css("display", "none");
         }
+    }
 
-        window.onclick = function (event) {
-            if ($(event.target).get(0).id === 'myModal') {
-                $modal.css("display", "none");
-                $(".modal-plus").css("display", "none");
-            }
-        }
-
-    </script>
+</script>
 </body>
 
