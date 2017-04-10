@@ -1,5 +1,10 @@
 <head>
     <link href="valasztoCSS.css" rel="stylesheet" type="text/css"/>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </head>
 
 <?php
@@ -9,7 +14,6 @@
  * Date: 2017. 02. 17.
  * Time: 9:07
  */
-
 include 'dbCommands.php';
 
 //main
@@ -19,13 +23,11 @@ selectStudent();
 
 disconnect();
 
-
-function selectStudent()
-{
+function selectStudent() {
     global $conn, $tableDiak, $tableEvfolyam, $tableTanev, $tableOsztaly;
 
     echo "<div id='diakok'>";
-    echo "<div class='kiscim'>Válasszon a diákok közül</div>";
+    echo "<div class='kiscim'>Válasszon a diákok közül!</div>";
     echo "<form action='jegyvalaszto.php' method='get' class='valaszto'>";
 
 
@@ -35,17 +37,13 @@ function selectStudent()
     $tanev = mysqli_real_escape_string($conn, $tanev);
     $osztaly = $_GET["osztalyok"];
     $osztaly = mysqli_real_escape_string($conn, $osztaly); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
-
-
-
-
     //Kiválasztjuk a kapott évfolyam és osztály alapján az abba tartozó diákokat
-    $sql = "SELECT ".$tableDiak.".id, ".$tableDiak.".nev, ".$tableDiak.".szuletes 
-            FROM ".$tableDiak."
-            INNER JOIN ".$tableEvfolyam." ON ".$tableDiak.".id = ".$tableEvfolyam.".diakid
-            INNER JOIN ".$tableTanev." ON ".$tableEvfolyam.".tanevid = ".$tableTanev.".id
-            INNER JOIN ".$tableOsztaly." ON ".$tableEvfolyam.".osztalyid = ".$tableOsztaly.".id
-            WHERE ".$tableOsztaly.".id = ".$osztaly." AND ".$tableTanev.".id = ".$tanev.";";
+    $sql = "SELECT " . $tableDiak . ".id, " . $tableDiak . ".nev, " . $tableDiak . ".szuletes 
+            FROM " . $tableDiak . "
+            INNER JOIN " . $tableEvfolyam . " ON " . $tableDiak . ".id = " . $tableEvfolyam . ".diakid
+            INNER JOIN " . $tableTanev . " ON " . $tableEvfolyam . ".tanevid = " . $tableTanev . ".id
+            INNER JOIN " . $tableOsztaly . " ON " . $tableEvfolyam . ".osztalyid = " . $tableOsztaly . ".id
+            WHERE " . $tableOsztaly . ".id = " . $osztaly . " AND " . $tableTanev . ".id = " . $tanev . ";";
     //echo "Név<br>";
     $result = $conn->query($sql);
 
@@ -70,9 +68,9 @@ function selectStudent()
 
 
     echo "</form>";
+    
+    echo "<button class='vissza' onclick='goBack()'>Go Back</button>";
+    
     echo "</div>";
-
 }
-
-
 ?>

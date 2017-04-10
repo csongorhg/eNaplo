@@ -11,7 +11,9 @@
 
 
         <script>
-
+            function goBack() {
+                window.history.back();
+            }
         </script>
 
     </head>
@@ -19,10 +21,6 @@
 
     <body>
 
-
-        <form action='leptet.php' >
-            <input type = 'submit' />
-        </form>
 
         <?php
         /**
@@ -44,7 +42,7 @@
             global $conn, $tableTanev, $tableSzak;
 
             echo "<div id='tanevek'>";
-            echo "<div class='kiscim'>Tanév kiválasztása</div>";
+            echo "<div class='kiscim'>Válassza ki a tanévet!</div>";
             echo "<form action='osztalyvalaszto.php' method='get' class='valaszto'>";
 
 
@@ -70,10 +68,16 @@
             //elküld gomb
             echo "<input type = 'submit' class='gomb'/><br>";
 
+
+            echo "<form action='leptet.php' >";
+            echo "<input class='gomb' value='Léptet' type = 'submit' />";
+            echo "</form>";
+
+
+            echo "<button class='vissza' onclick='goBack()'>Go Back</button>";
+
             echo "</div>";
         }
-
-        
         ?>
 
 

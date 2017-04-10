@@ -1,5 +1,10 @@
 <head>
     <link href="valasztoCSS.css" rel="stylesheet" type="text/css"/>
+    <script>
+        function goBack() {
+            window.history.back();
+        }
+    </script>
 </head>
 
 <?php
@@ -9,7 +14,6 @@
  * Date: 2017.02.18.
  * Time: 10:03
  */
-
 include 'dbCommands.php';
 
 //main
@@ -19,13 +23,11 @@ selectYears();
 
 disconnect();
 
-
-function selectYears()
-{
+function selectYears() {
     global $conn, $tableOsztaly, $tableSzak, $tableEvfolyam;
 
     echo "<div id='osztalyok'>";
-    echo "<div class='kiscim'>Válassza ki az osztályt</div>";
+    echo "<div class='kiscim'>Válassza ki az osztályt!</div>";
     echo "<form action='diakvalaszto.php' method='get' class='valaszto'>";
 
 
@@ -33,15 +35,11 @@ function selectYears()
     //Kapott érték
     $tanev = $_GET["tanevek"];
     $tanev = mysqli_real_escape_string($conn, $tanev); //ellenőrzi az átadott adat hitelességér -> nem lehet módositani a lekérdezést
-
-
-
-
     //Kiválasztjuk a kapott osztály alapján az abba tartozó diákokat
-    $sql = "SELECT ".$tableOsztaly.".id, ".$tableOsztaly.".szam, ".$tableOsztaly.".betu, ".$tableSzak.".szak
-    FROM ".$tableOsztaly." INNER JOIN ".$tableEvfolyam." ON ".$tableOsztaly.".id = ".$tableEvfolyam.".osztalyid 
-    INNER JOIN ".$tableSzak." ON ".$tableOsztaly.".szakid = ".$tableSzak.".id
-    WHERE ".$tableEvfolyam.".tanevid = ".$tanev;
+    $sql = "SELECT DISTINCT " . $tableOsztaly . ".id, " . $tableOsztaly . ".szam, " . $tableOsztaly . ".betu, " . $tableSzak . ".szak
+    FROM " . $tableOsztaly . " INNER JOIN " . $tableEvfolyam . " ON " . $tableOsztaly . ".id = " . $tableEvfolyam . ".osztalyid 
+    INNER JOIN " . $tableSzak . " ON " . $tableOsztaly . ".szakid = " . $tableSzak . ".id
+    WHERE " . $tableEvfolyam . ".tanevid = " . $tanev;
     $result = $conn->query($sql);
 
     //Kiirjuk az összes osztályt
@@ -61,7 +59,9 @@ function selectYears()
     echo "<input type = 'hidden' name='tanevek' value='$tanev' />";
 
     echo "</form > ";
+
+    echo "<button class='vissza' onclick='goBack()'>Go Back</button>";
+
     echo "</div > ";
 }
-
 ?>
