@@ -29,7 +29,7 @@ CREATE TABLE `diak` (
   `nev` tinytext COLLATE utf8_hungarian_ci,
   `szuletes` date DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `diak` (
 
 LOCK TABLES `diak` WRITE;
 /*!40000 ALTER TABLE `diak` DISABLE KEYS */;
-INSERT INTO `diak` VALUES (1,'Péter Kalapács','1999-02-13'),(2,'Kalap Ernő','1999-11-01'),(3,'József Béla','1999-12-22');
+INSERT INTO `diak` VALUES (1,'Péter Kalapács','1999-02-13'),(2,'Kalap Ernő','1999-11-01'),(3,'József Béla','1999-12-22'),(4,'Tamás Péter','1999-10-22'),(5,'Kalap Álmos','1999-10-22'),(6,'Tóth Péter','1999-10-22'),(7,'Varga Töhötöm','1999-10-22'),(8,'Németh Endre','1999-10-22'),(9,'Szalai Mihály','1999-10-22'),(10,'Vörös József','1999-10-22');
 /*!40000 ALTER TABLE `diak` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -57,7 +57,7 @@ CREATE TABLE `evfolyam` (
   PRIMARY KEY (`id`),
   KEY `id_idx` (`diakid`),
   CONSTRAINT `id` FOREIGN KEY (`diakid`) REFERENCES `diak` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=129 DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -66,7 +66,7 @@ CREATE TABLE `evfolyam` (
 
 LOCK TABLES `evfolyam` WRITE;
 /*!40000 ALTER TABLE `evfolyam` DISABLE KEYS */;
-INSERT INTO `evfolyam` VALUES (1,5,3,1),(2,5,4,2),(3,5,1,3);
+INSERT INTO `evfolyam` VALUES (1,5,1,1),(2,5,2,2),(3,5,3,3),(38,5,4,4),(125,5,1,5),(126,5,2,6),(127,5,3,7),(128,5,4,8);
 /*!40000 ALTER TABLE `evfolyam` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -86,7 +86,7 @@ CREATE TABLE `jegy` (
   `datum` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   KEY `id_idx` (`evfolyamid`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_icelandic_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -95,7 +95,6 @@ CREATE TABLE `jegy` (
 
 LOCK TABLES `jegy` WRITE;
 /*!40000 ALTER TABLE `jegy` DISABLE KEYS */;
-INSERT INTO `jegy` VALUES (2,1,4,2,2,'2017-05-16 00:00:00'),(5,1,3,1,1,'2017-01-01 00:00:00'),(6,1,2,2,3,'2017-03-15 21:35:50'),(9,3,2,1,1,'2016-09-15 00:00:00'),(10,3,2,1,1,'2016-09-15 00:00:00'),(12,2,2,1,1,'2017-03-15 00:00:00'),(13,1,1,1,1,'2017-04-08 18:23:52'),(14,1,1,1,1,'2017-04-08 18:23:53'),(16,1,1,1,1,'2017-04-08 18:23:53');
 /*!40000 ALTER TABLE `jegy` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -114,7 +113,7 @@ CREATE TABLE `osztaly` (
   `kezdes` int(11) DEFAULT NULL,
   `befejezes` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=514 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -123,7 +122,7 @@ CREATE TABLE `osztaly` (
 
 LOCK TABLES `osztaly` WRITE;
 /*!40000 ALTER TABLE `osztaly` DISABLE KEYS */;
-INSERT INTO `osztaly` VALUES (1,26,'A',1,2014,2018),(2,26,'B',1,2014,2018),(3,26,'C',2,2014,2018),(4,26,'D',2,2014,2018),(51,27,'A',1,2014,2018),(52,27,'C',2,2014,2018),(53,27,'D',2,2014,2018),(54,9,'A',1,2018,2022),(55,9,'B',1,2018,2022),(56,9,'C',2,2018,2022),(57,9,'D',2,2018,2022);
+INSERT INTO `osztaly` VALUES (1,12,'A',1,2013,2017),(2,11,'B',1,2014,2018),(3,10,'C',2,2015,2019),(4,9,'D',2,2016,2020),(497,12,'B',1,2014,2018),(499,11,'C',2,2015,2019),(501,10,'D',2,2016,2020),(506,12,'C',2,2015,2019),(507,10,'D',2,2016,2020),(508,12,'C',2,2015,2019),(509,11,'D',2,2016,2020),(510,9,'A',1,2019,2023),(511,9,'B',1,2019,2023),(512,9,'C',2,2019,2023),(513,9,'D',2,2019,2023);
 /*!40000 ALTER TABLE `osztaly` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -188,7 +187,7 @@ CREATE TABLE `tanev` (
   `kezdet` int(11) DEFAULT NULL,
   `veg` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=67 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8 COLLATE=utf8_hungarian_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -197,7 +196,7 @@ CREATE TABLE `tanev` (
 
 LOCK TABLES `tanev` WRITE;
 /*!40000 ALTER TABLE `tanev` DISABLE KEYS */;
-INSERT INTO `tanev` VALUES (66,'2018/2019',2018,2019);
+INSERT INTO `tanev` VALUES (5,'2017/2018',2017,2018);
 /*!40000 ALTER TABLE `tanev` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -259,4 +258,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2017-04-09 19:07:03
+-- Dump completed on 2017-04-10 22:12:06
