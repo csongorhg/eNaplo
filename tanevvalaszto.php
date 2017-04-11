@@ -67,13 +67,13 @@
 
             //elküld gomb
             echo "<input type = 'submit' class='gomb'/><br>";
-
-
+            echo "</form>";
+            
             echo "<form action='leptet.php' >";
-            echo "<input class='gomb' value='Léptet' type = 'submit' />";
+            echo "<input class='vissza' value='Léptet' type = 'submit' />";
             echo "</form>";
 
-
+            //vissza
             echo "<button class='vissza' onclick='goBack()'>Go Back</button>";
 
             echo "</div>";
